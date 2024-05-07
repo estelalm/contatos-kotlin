@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.twotone.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -70,11 +71,15 @@ fun TelaCadastro(navController: NavHostController) {
                 .padding(16.dp)
         ) {
             Row (
-                modifier = Modifier.fillMaxWidth().background(Color.Black),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Black),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    modifier = Modifier.clickable { navController.navigate("home") }.padding(10.dp),
+                    modifier = Modifier
+                        .clickable { navController.navigate("home") }
+                        .padding(10.dp),
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = "Voltar",
                     tint = Color.Magenta
@@ -94,6 +99,7 @@ fun TelaCadastro(navController: NavHostController) {
                 value = nameState.value,
                 onValueChange = {
                     nameState.value = it
+                    nameErrorState.value = false
                 },
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color.Magenta,
@@ -107,6 +113,11 @@ fun TelaCadastro(navController: NavHostController) {
                     Text(
                         text = stringResource(id = R.string.contact_name)
                     )
+                },
+                trailingIcon = {
+                               if(nameErrorState.value){
+                                   Icon(imageVector = Icons.TwoTone.Warning , contentDescription = "Error" , tint = Color.Red)
+                               }
                 },
                 isError = nameErrorState.value
             )

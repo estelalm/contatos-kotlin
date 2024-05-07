@@ -1,6 +1,7 @@
 package br.senai.sp.jandira.contatos.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -29,6 +30,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,13 +52,17 @@ fun TelaHome(navController: NavHostController) {
 
     val cr = ContatoRepository(LocalContext.current)
     val contatos = cr.buscarTodosOsContatos()
+    val familyState = remember {
+        mutableStateOf(false)
+    }
 
-    Scaffold (
+    Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
                     Icon(
-                        modifier = Modifier.padding(18.dp),
+                        modifier = Modifier.padding(18.dp)
+                            .clickable { familyState.value = false },
                         imageVector = Icons.Outlined.ArrowBack,
                         contentDescription = "Ícone de casa",
                         tint = Color.Magenta
@@ -74,8 +81,9 @@ fun TelaHome(navController: NavHostController) {
                 ),
                 actions = {
                     Icon(
-                        modifier = Modifier.padding(18.dp),
-                        imageVector = Icons.TwoTone.AccountCircle ,
+                        modifier = Modifier.padding(18.dp)
+                            .clickable { familyState.value = true },
+                        imageVector = Icons.TwoTone.Favorite,
                         contentDescription = "Ícone de usuário",
                         tint = Color.Magenta
                     )
@@ -94,20 +102,25 @@ fun TelaHome(navController: NavHostController) {
                 Icon(Icons.TwoTone.Add, contentDescription = "", tint = Color.Black)
             }
         }
-    ){innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         )
         {
-            LazyColumn (
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth(),
                 contentPadding = PaddingValues(12.dp)
             ) {
-                items(contatos){
-                    Card (
+                items(contatos) {
+                    if (familyState.value) {
+
+                    } else {
+
+                    }
+                    Card(
                         modifier = Modifier
                             .height(140.dp)
                             .fillMaxWidth()
@@ -117,14 +130,14 @@ fun TelaHome(navController: NavHostController) {
                             containerColor = Color.Black
                         ),
                         border = BorderStroke(1.dp, Color.Magenta)
-                    ){
+                    ) {
                         Row(
                             modifier = Modifier
                                 .padding(24.dp)
                                 .fillMaxSize(),
                             verticalAlignment = Alignment.CenterVertically
-                        ){
-                            Card (
+                        ) {
+                            Card(
                                 modifier = Modifier
                                     .size(60.dp),
                                 shape = CircleShape,
@@ -133,35 +146,36 @@ fun TelaHome(navController: NavHostController) {
                                 ),
                                 border = BorderStroke(2.dp, Color.Magenta)
                             ) {
-                               Row (
-                                   modifier = Modifier.fillMaxSize(),
-                                   verticalAlignment = Alignment.CenterVertically,
-                                   horizontalArrangement = Arrangement.Center
-                               ){
-                                   Text(
-                                       text = it.nome.substring(0..0),
-                                       fontSize = 32.sp,
-                                       color = Color.Magenta
-                                   )
-                               }
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center
+                                ) {
+                                    Text(
+                                        text = it.nome.substring(0..0),
+                                        fontSize = 32.sp,
+                                        color = Color.Magenta
+                                    )
+                                }
                             }
-                            Column (
+                            Column(
                                 modifier = Modifier.padding(horizontal = 16.dp)
-                            ){
-                                Row (
+                            ) {
+                                Row(
                                     verticalAlignment = Alignment.CenterVertically
-                                ){
+                                ) {
                                     Text(
                                         text = it.nome,
                                         color = Color.White,
                                         fontSize = 20.sp
                                     )
-                                    if(it.isFamilia){
+                                    if (it.isFamilia) {
                                         Icon(
                                             imageVector = Icons.TwoTone.Favorite,
                                             contentDescription = "Coração",
                                             tint = Color.Magenta,
-                                            modifier = Modifier.height(20.dp).padding(horizontal = 10.dp)
+                                            modifier = Modifier.height(20.dp)
+                                                .padding(horizontal = 10.dp)
                                         )
                                     }
                                 }
